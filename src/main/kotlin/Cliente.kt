@@ -1,4 +1,6 @@
-class Cliente(dni:String, listacuentas: MutableList<Cuenta>) { /*creamos el objeto "Cliente"*/
+class Cliente(dni:String, listacuentasInicial: MutableList<Cuenta>) { /*creamos el objeto "Cliente"*/
+
+
     var dni=dni
         get():String{
             return field
@@ -10,25 +12,31 @@ class Cliente(dni:String, listacuentas: MutableList<Cuenta>) { /*creamos el obje
                 field = valor
             }
         }
-    var listacuentas=listacuentas                   /* configuramos los métodos get y set para los atributos*/
+    var listacuentas=listacuentasInicial                   /* configuramos los métodos get y set para los atributos*/
         get():MutableList<Cuenta>{
             return field
         }
         set(valor:MutableList<Cuenta>){
-            if (valor.size>3){
-                println("Error, el máximo numero de cuentas por persona es 3")
-            }else if(valor.size<1){
-                println("Error, debe haber al menos una cuenta por cliente")
-            }else{
+            if (valor.size<=3){
                 field=valor
+            }else{
+                println("Error, el máximo numero de cuentas por persona es 3")
             }
         }
+    init {
+        if (listacuentasInicial.size>3)
+            while(listacuentasInicial.size>3){
+                listacuentasInicial.removeAt(listacuentasInicial.size-1)
+            }
+        listacuentas=listacuentasInicial
+    }
     fun añadeCuenta(nuevacuenta:Cuenta){         /* función para añadir cuentas nuevas*/
         if(listacuentas.size<3) {
             listacuentas.add(nuevacuenta)
             println("La cuenta ${nuevacuenta.numcuenta} se ha añadido correctamente al cliente ${this.dni}")
         }
     }
+
     fun moroso(){                                 /* función paracomprobar si un cliente tiene saldo negativo en alguna de sus cuentas*/
         for (c in this.listacuentas){
             if (c.saldo < 0){
